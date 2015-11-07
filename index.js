@@ -6,7 +6,9 @@ module.exports = {
     // Allow the stage to be configured by an environment
     // variable, but use Babel's default stage (2) if
     // no environment variable is specified.
-    var stage = process.env.BABEL_JEST_STAGE || 2;
+    var presets = process.env.BABEL_JEST_PRESETS;
+
+    presets = JSON.parse(presets || "null") || [];
 
     // Allow the the processor to be configured to process specific
     // modules within the node_modules/ folder, i.e, symbolic links used to
@@ -25,10 +27,10 @@ module.exports = {
 
     // Ignore all other files within node_modules
     // babel files can be .js, .es, .jsx or .es6
-    if ((ok || filename.indexOf("node_modules") === -1) && babel.canCompile(filename)) {
+    if (ok || filename.indexOf("node_modules") === -1) {
       return babel.transform(src, {
         filename: filename,
-        stage: stage,
+        presets: presets,
         retainLines: true,
         auxiliaryCommentBefore: "istanbul ignore next"
       }).code;
